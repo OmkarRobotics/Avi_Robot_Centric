@@ -7,36 +7,44 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "ControllerVibrate", group = "Linear OpMode")
+@TeleOp(name = "robotcentric", group = "Linear OpMode")
 public class robotcentric extends LinearOpMode {
-    GamepadEx gamepad;
+    private GamepadEx gamepad;
 
-    Motor m_motor_1 = new Motor(hardwareMap, "frontLeft");
-    Motor m_motor_2 = new Motor(hardwareMap, "frontRight");
-    Motor m_motor_3 = new Motor(hardwareMap, "backLeft");
-    Motor m_motor_4 = new Motor(hardwareMap, "backRight");
-    // Invert right motors for proper movement
-    // input motors exactly as shown below
-    MecanumDrive mecanum = new MecanumDrive(m_motor_1, m_motor_2, m_motor_3,
-            m_motor_4);
-    // grab the internal DcMotor object
-    DcMotor motorOne = m_motor_1.motor;
+    private Motor frontLeft;
+    private Motor frontRight;
+    private Motor backLeft;
+    private Motor backRight;
     @Override
     public void runOpMode() {
-        gamepad = new GamepadEx(gamepad1);
+        try{
+            gamepad = new GamepadEx(gamepad1);
+            frontLeft = new Motor(hardwareMap, "FL");
+            frontRight = new Motor(hardwareMap, "FR");
+            backLeft  = new Motor(hardwareMap, "BL");
+            backRight = new Motor(hardwareMap, "BR");
+        }catch (Error e){
+            telemetry.addData("Error: ", e.getMessage());
+            telemetry.update();
+        }
         waitForStart();
         while (opModeIsActive()) {
             double y = -gamepad.getLeftY();  // Forward/backward input
-            double x = gamepad.getLeftX();   // Strafing input
-            double rotation = gamepad.getRightX();  // Turning input
-            double frontRightPower = y + x + rotation;
-            double frontLeftPower = (y - x - rotation); * -1
-            double backLeftPower = y - x + rotation;
-            double backRightPower = (y + x - rotation); * -1
-            m_motor_1.set(frontLeftPower);
-            m_motor_2.set(frontRightPower);
-            m_motor_3.set(backLeftPower);
-            m_motor_4.set(backRightPower);
+            double x = gamepad.getRightX();   // strafing
+            double rotation = gamepad.getLeftX();  // turning
+            double frontRightPower = (y + x + rotation) *-1;
+            double frontLeftPower = (y - x - rotation);
+            double backLeftPower = (y - x + rotation);
+            double backRightPower = (y + x - rotation) *-1;
+            frontLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+            frontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+            backLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+            backRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+            frontLeft.set(frontLeftPower);
+            frontRight.set(frontRightPower);
+            backLeft.set(backLeftPower);
+            backRight.set(backRightPower);
+
 
 
         }
