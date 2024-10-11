@@ -36,8 +36,8 @@ public class robotcentric extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             double y = -gamepad.getLeftY();  // Forward/backward input
-            double x = gamepad.getRightX();   // strafing
-            double rotation = gamepad.getLeftX();  // turning
+            double x = gamepad.getLeftX();   // strafing
+            double rotation = gamepad.getRightY();  // turning
             double heading = imu.getAngularOrientation().firstAngle;
             double rotatedStrafe = (x * Math.cos(-heading)) - (y * Math.sin(-heading));
             double rotatedVerticalMovement = (x * Math.sin(-heading)) + (y * Math.cos(-heading));
