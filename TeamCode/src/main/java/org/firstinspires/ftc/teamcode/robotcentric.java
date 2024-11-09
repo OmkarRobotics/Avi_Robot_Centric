@@ -8,6 +8,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 
 @TeleOp(name = "robotcentric", group = "Linear OpMode")
 public class robotcentric extends LinearOpMode {
+
     private GamepadEx gamepad;
 
     private Motor frontLeft;
@@ -15,8 +16,11 @@ public class robotcentric extends LinearOpMode {
     private Motor backLeft;
     private Motor backRight;
     private BNO055IMU imu;
+
     @Override
+
     public void runOpMode() {
+
         try{
             gamepad = new GamepadEx(gamepad1);
             frontLeft = new Motor(hardwareMap, "FL");
@@ -33,8 +37,11 @@ public class robotcentric extends LinearOpMode {
             telemetry.addData("Error: ", e.getMessage());
             telemetry.update();
         }
+
         waitForStart();
+
         while (opModeIsActive()) {
+
             double y = -gamepad.getLeftY();  // Forward/backward input
             double x = gamepad.getLeftX();   // strafing
             double rotation = gamepad.getRightY();  // turning
@@ -47,6 +54,7 @@ public class robotcentric extends LinearOpMode {
             frontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
             backLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
             backRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+            
             frontLeft.set((rotatedVerticalMovement + rotatedStrafe + rotation) / maintainRatio);
             frontRight.set((rotatedVerticalMovement - rotatedStrafe - rotation) / maintainRatio);
             backLeft.set((rotatedVerticalMovement - rotatedStrafe + rotation) / maintainRatio);
